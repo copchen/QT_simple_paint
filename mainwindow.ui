@@ -40,7 +40,7 @@
      <number>1</number>
     </property>
     <item>
-     <widget class="DrawingCanvas" name="Canvas" native="true">
+     <widget class="DrawingCanvas" name="drawingCanvas" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>

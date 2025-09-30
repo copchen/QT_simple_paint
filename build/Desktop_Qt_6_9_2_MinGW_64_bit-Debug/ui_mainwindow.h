@@ -28,7 +28,7 @@ public:
     QAction *actionLine;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
-    DrawingCanvas *Canvas;
+    DrawingCanvas *drawingCanvas;
     QMenuBar *menubar;
     QToolBar *toolBar;
 
@@ -55,18 +55,18 @@ public:
         horizontalLayout->setObjectName("horizontalLayout");
         horizontalLayout->setSizeConstraint(QLayout::SizeConstraint::SetDefaultConstraint);
         horizontalLayout->setContentsMargins(1, 0, 1, 1);
-        Canvas = new DrawingCanvas(centralwidget);
-        Canvas->setObjectName("Canvas");
+        drawingCanvas = new DrawingCanvas(centralwidget);
+        drawingCanvas->setObjectName("drawingCanvas");
         QSizePolicy sizePolicy1(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(Canvas->sizePolicy().hasHeightForWidth());
-        Canvas->setSizePolicy(sizePolicy1);
-        Canvas->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
-        Canvas->setAutoFillBackground(false);
-        Canvas->setStyleSheet(QString::fromUtf8("background-color: white; border: 1px solid gray;"));
+        sizePolicy1.setHeightForWidth(drawingCanvas->sizePolicy().hasHeightForWidth());
+        drawingCanvas->setSizePolicy(sizePolicy1);
+        drawingCanvas->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
+        drawingCanvas->setAutoFillBackground(false);
+        drawingCanvas->setStyleSheet(QString::fromUtf8("background-color: white; border: 1px solid gray;"));
 
-        horizontalLayout->addWidget(Canvas);
+        horizontalLayout->addWidget(drawingCanvas);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);

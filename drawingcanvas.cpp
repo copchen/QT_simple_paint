@@ -4,11 +4,14 @@ DrawingCanvas::DrawingCanvas(QWidget *parent) : QWidget(parent) {
     setMouseTracking(true);
 }
 
+void DrawingCanvas::setTool(Shape::Type tool) {
+    currentTool = tool;
+}
+
 void DrawingCanvas::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.setPen(Qt::black);
 
-    // Рисуем все сохранённые фигуры
     for (const Shape &shape : shapes) {
         if (shape.type == Shape::Line) {
             painter.drawLine(shape.start, shape.end);
@@ -19,14 +22,11 @@ void DrawingCanvas::paintEvent(QPaintEvent *event) {
         }
     }
 
-    // Рисуем текущий путь (для свободного рисования)
     if (drawing && currentTool == Shape::Freehand) {
         for (int i = 1; i < currentPath.size(); ++i) {
             painter.drawLine(currentPath[i - 1], currentPath[i]);
         }
-    }
-    // Рисуем текущую прямую линию
-    else if (drawing && currentTool == Shape::Line) {
+    } else if (drawing && currentTool == Shape::Line) {
         painter.drawLine(startPoint, endPoint);
     }
 }

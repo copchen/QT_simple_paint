@@ -8,12 +8,10 @@
 #include <QPoint>
 
 struct Shape {
-    enum Type { Line, Freehand }; // Добавляем тип Freehand для кисти
+    enum Type { Line, Freehand };
     Type type;
-    // Для прямой линии: начальная и конечная точки
     QPoint start;
     QPoint end;
-    // Для свободного рисования: набор точек
     QVector<QPoint> points;
 };
 
@@ -22,6 +20,7 @@ class DrawingCanvas : public QWidget {
 
 public:
     explicit DrawingCanvas(QWidget *parent = nullptr);
+    void setTool(Shape::Type tool); // Метод для установки инструмента
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -31,11 +30,11 @@ protected:
 
 private:
     bool drawing = false;
-    Shape::Type currentTool = Shape::Freehand; // Текущий инструмент (по умолчанию кисть)
-    QVector<QPoint> currentPath; // Текущий путь для свободного рисования
-    QPoint startPoint; // Для прямой линии
-    QPoint endPoint;   // Для прямой линии
-    QVector<Shape> shapes; // Список сохранённых фигур
+    Shape::Type currentTool = Shape::Freehand;
+    QVector<QPoint> currentPath;
+    QPoint startPoint;
+    QPoint endPoint;
+    QVector<Shape> shapes;
 };
 
 #endif // DRAWINGCANVAS_H
