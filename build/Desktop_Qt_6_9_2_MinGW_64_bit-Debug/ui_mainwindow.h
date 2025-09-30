@@ -10,10 +10,12 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 #include "drawingcanvas.h"
 
@@ -22,16 +24,25 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
+    QAction *actionFreehand;
+    QAction *actionLine;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     DrawingCanvas *Canvas;
     QMenuBar *menubar;
+    QToolBar *toolBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
         MainWindow->resize(983, 660);
+        actionFreehand = new QAction(MainWindow);
+        actionFreehand->setObjectName("actionFreehand");
+        actionFreehand->setMenuRole(QAction::MenuRole::NoRole);
+        actionLine = new QAction(MainWindow);
+        actionLine->setObjectName("actionLine");
+        actionLine->setMenuRole(QAction::MenuRole::NoRole);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
@@ -43,7 +54,7 @@ public:
         horizontalLayout->setSpacing(0);
         horizontalLayout->setObjectName("horizontalLayout");
         horizontalLayout->setSizeConstraint(QLayout::SizeConstraint::SetDefaultConstraint);
-        horizontalLayout->setContentsMargins(1, 40, 1, 1);
+        horizontalLayout->setContentsMargins(1, 0, 1, 1);
         Canvas = new DrawingCanvas(centralwidget);
         Canvas->setObjectName("Canvas");
         QSizePolicy sizePolicy1(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Preferred);
@@ -62,6 +73,12 @@ public:
         menubar->setObjectName("menubar");
         menubar->setGeometry(QRect(0, 0, 983, 25));
         MainWindow->setMenuBar(menubar);
+        toolBar = new QToolBar(MainWindow);
+        toolBar->setObjectName("toolBar");
+        MainWindow->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolBar);
+
+        toolBar->addAction(actionLine);
+        toolBar->addAction(actionFreehand);
 
         retranslateUi(MainWindow);
 
@@ -71,6 +88,9 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        actionFreehand->setText(QCoreApplication::translate("MainWindow", "\320\232\320\270\321\201\321\202\321\214", nullptr));
+        actionLine->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\321\217\320\274\320\260\321\217 \320\273\320\270\320\275\320\270\321\217", nullptr));
+        toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 
 };
