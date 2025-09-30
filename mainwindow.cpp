@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setMinimumSize(800, 600);
+    resize(800, 600);
 }
 
 MainWindow::~MainWindow()
