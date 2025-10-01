@@ -17,7 +17,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    DrawingCanvas *canvas; // Указатель на холст
+    DrawingCanvas *canvas;
 };
 
 #endif // MAINWINDOW_H

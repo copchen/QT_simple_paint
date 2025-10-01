@@ -7,13 +7,16 @@
 #include <QVector>
 #include <QPoint>
 
+
 struct Shape {
-   enum Type { Line, Freehand, Rectangle, Polyline, Ellipse, Polygon };
+   enum Type { Line, Freehand, Rectangle, Polyline, Ellipse, Polygon,Text };
     Type type;
     QPoint start;
     QPoint end;
     QVector<QPoint> points;
+    QString text;
 };
+
 
 class DrawingCanvas : public QWidget {
     Q_OBJECT
@@ -27,7 +30,9 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-     void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+
 
 private:
     bool drawing = false;
@@ -36,6 +41,9 @@ private:
     QPoint startPoint;
     QPoint endPoint;
     QVector<Shape> shapes;
+    QString currentText;
+    QPoint textStartPoint;
+    bool isTextInputActive = false;
 };
 
 #endif // DRAWINGCANVAS_H

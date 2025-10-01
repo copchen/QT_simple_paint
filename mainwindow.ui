@@ -86,6 +86,7 @@
    <addaction name="actionRectangle"/>
    <addaction name="actionEllipse"/>
    <addaction name="actionPolygon"/>
+   <addaction name="actionText"/>
   </widget>
   <action name="actionFreehand">
    <property name="text">
@@ -130,6 +131,14 @@
   <action name="actionPolygon">
    <property name="text">
     <string>Многоугольник</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionText">
+   <property name="text">
+    <string>Текст</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

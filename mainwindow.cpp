@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionPolygon, &QAction::triggered, this, [this]() {
         if (canvas) canvas->setTool(Shape::Polygon);
     });
+    connect(ui->actionText, &QAction::triggered, this, [this]() {
+        if (canvas) canvas->setTool(Shape::Text);
+    });
 
     setMinimumSize(800, 600);
     resize(800, 600);

@@ -1,17 +1,31 @@
 #include "drawingcanvas.h"
+#include <QKeyEvent>
 
 DrawingCanvas::DrawingCanvas(QWidget *parent) : QWidget(parent) {
     setMouseTracking(true);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 void DrawingCanvas::setTool(Shape::Type tool) {
     currentTool = tool;
+    if (currentTool != Shape::Text && !currentText.isEmpty()) {
+        Shape shape;
+        shape.type = Shape::Text;
+        shape.start = textStartPoint;
+        shape.text = currentText;
+        shapes.append(shape);
+        currentText.clear();
+        isTextInputActive = false;
+        update();
+    }
 }
 
 void DrawingCanvas::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.setPen(Qt::black);
     painter.setRenderHint(QPainter::Antialiasing);
+    QFont font("Arial", 12);
+    painter.setFont(font);
 
     for (const Shape &shape : shapes) {
         if (shape.type == Shape::Line) {
@@ -30,6 +44,8 @@ void DrawingCanvas::paintEvent(QPaintEvent *event) {
             painter.drawEllipse(QRect(shape.start, shape.end));
         } else if (shape.type == Shape::Polygon) {
             painter.drawPolygon(shape.points.constData(), shape.points.size());
+        } else if (shape.type == Shape::Text) {
+            painter.drawText(shape.start, shape.text);
         }
     }
 
@@ -50,25 +66,46 @@ void DrawingCanvas::paintEvent(QPaintEvent *event) {
             painter.drawLine(currentPath[i - 1], currentPath[i]);
         }
     }
+
+    // Отрисовка текущего текста
+    if (currentTool == Shape::Text && isTextInputActive && !currentText.isEmpty()) {
+        painter.drawText(textStartPoint, currentText);
+    }
 }
 
 void DrawingCanvas::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
-        drawing = true;
-        if (currentTool == Shape::Freehand) {
-            currentPath.clear();
-            currentPath.append(event->pos());
-        } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
-            startPoint = event->pos();
-            endPoint = startPoint;
-        } else if (currentTool == Shape::Polyline || currentTool == Shape::Polygon) {
-            if (currentPath.isEmpty()) {
-                currentPath.append(event->pos());
-            } else {
-                currentPath.append(event->pos());
+        if (currentTool == Shape::Text) {
+            if (!currentText.isEmpty()) {
+                Shape shape;
+                shape.type = Shape::Text;
+                shape.start = textStartPoint;
+                shape.text = currentText;
+                shapes.append(shape);
+                currentText.clear();
             }
+            textStartPoint = event->pos();
+            currentText.clear();
+            isTextInputActive = true;
+            setFocus();
+            update();
+        } else {
+            drawing = true;
+            if (currentTool == Shape::Freehand) {
+                currentPath.clear();
+                currentPath.append(event->pos());
+            } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
+                startPoint = event->pos();
+                endPoint = startPoint;
+            } else if (currentTool == Shape::Polyline || currentTool == Shape::Polygon) {
+                if (currentPath.isEmpty()) {
+                    currentPath.append(event->pos());
+                } else {
+                    currentPath.append(event->pos());
+                }
+            }
+            update();
         }
-        update();
     }
 }
 
@@ -78,7 +115,6 @@ void DrawingCanvas::mouseMoveEvent(QMouseEvent *event) {
             currentPath.append(event->pos());
         } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
             endPoint = event->pos();
-        } else if (currentTool == Shape::Polyline || currentTool == Shape::Polygon) {
         }
         update();
     }
@@ -119,5 +155,32 @@ void DrawingCanvas::mouseDoubleClickEvent(QMouseEvent *event) {
         shapes.append(shape);
         currentPath.clear();
         update();
+    }
+}
+
+void DrawingCanvas::keyPressEvent(QKeyEvent *event) {
+    if (currentTool == Shape::Text && isTextInputActive) {
+        if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+            if (!currentText.isEmpty()) {
+                Shape shape;
+                shape.type = Shape::Text;
+                shape.start = textStartPoint;
+                shape.text = currentText;
+                shapes.append(shape);
+            }
+            currentText.clear();
+            isTextInputActive = false;
+            update();
+        } else if (event->key() == Qt::Key_Backspace) {
+            if (!currentText.isEmpty()) {
+                currentText.chop(1);
+                update();
+            }
+        } else if (!event->text().isEmpty() && event->text()[0].isPrint()) {
+            currentText += event->text();
+            update();
+        }
+    } else {
+        QWidget::keyPressEvent(event);
     }
 }
