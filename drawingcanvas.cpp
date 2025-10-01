@@ -11,6 +11,7 @@ void DrawingCanvas::setTool(Shape::Type tool) {
 void DrawingCanvas::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.setPen(Qt::black);
+    painter.setRenderHint(QPainter::Antialiasing);
 
     for (const Shape &shape : shapes) {
         if (shape.type == Shape::Line) {
@@ -19,6 +20,8 @@ void DrawingCanvas::paintEvent(QPaintEvent *event) {
             for (int i = 1; i < shape.points.size(); ++i) {
                 painter.drawLine(shape.points[i - 1], shape.points[i]);
             }
+        } else if (shape.type == Shape::Rectangle) {
+            painter.drawRect(QRect(shape.start, shape.end));
         }
     }
 
@@ -28,6 +31,8 @@ void DrawingCanvas::paintEvent(QPaintEvent *event) {
         }
     } else if (drawing && currentTool == Shape::Line) {
         painter.drawLine(startPoint, endPoint);
+    } else if (drawing && currentTool == Shape::Rectangle) {
+        painter.drawRect(QRect(startPoint, endPoint));
     }
 }
 
@@ -37,7 +42,7 @@ void DrawingCanvas::mousePressEvent(QMouseEvent *event) {
         if (currentTool == Shape::Freehand) {
             currentPath.clear();
             currentPath.append(event->pos());
-        } else if (currentTool == Shape::Line) {
+        } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle) {
             startPoint = event->pos();
             endPoint = startPoint;
         }
@@ -49,7 +54,7 @@ void DrawingCanvas::mouseMoveEvent(QMouseEvent *event) {
     if (drawing) {
         if (currentTool == Shape::Freehand) {
             currentPath.append(event->pos());
-        } else if (currentTool == Shape::Line) {
+        } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle) {
             endPoint = event->pos();
         }
         update();
@@ -64,7 +69,7 @@ void DrawingCanvas::mouseReleaseEvent(QMouseEvent *event) {
         if (currentTool == Shape::Freehand) {
             shape.points = currentPath;
             currentPath.clear();
-        } else if (currentTool == Shape::Line) {
+        } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle) {
             shape.start = startPoint;
             shape.end = endPoint;
         }

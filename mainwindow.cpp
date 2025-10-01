@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionLine, &QAction::triggered, this, [this]() {
         if (canvas) canvas->setTool(Shape::Line);
     });
+    connect(ui->actionRectangle, &QAction::triggered, this, [this]() {
+        if (canvas) canvas->setTool(Shape::Rectangle);
+    });
 
     setMinimumSize(800, 600);
     resize(800, 600);

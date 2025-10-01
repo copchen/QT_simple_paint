@@ -82,6 +82,7 @@
    </attribute>
    <addaction name="actionLine"/>
    <addaction name="actionFreehand"/>
+   <addaction name="actionRectangle"/>
   </widget>
   <action name="actionFreehand">
    <property name="text">
@@ -94,6 +95,14 @@
   <action name="actionLine">
    <property name="text">
     <string>Прямая линия</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionRectangle">
+   <property name="text">
+    <string>Прямоугольник</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

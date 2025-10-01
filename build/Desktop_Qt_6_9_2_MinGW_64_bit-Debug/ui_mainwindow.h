@@ -26,6 +26,7 @@ class Ui_MainWindow
 public:
     QAction *actionFreehand;
     QAction *actionLine;
+    QAction *actionRectangle;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     DrawingCanvas *drawingCanvas;
@@ -43,6 +44,9 @@ public:
         actionLine = new QAction(MainWindow);
         actionLine->setObjectName("actionLine");
         actionLine->setMenuRole(QAction::MenuRole::NoRole);
+        actionRectangle = new QAction(MainWindow);
+        actionRectangle->setObjectName("actionRectangle");
+        actionRectangle->setMenuRole(QAction::MenuRole::NoRole);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
@@ -79,6 +83,7 @@ public:
 
         toolBar->addAction(actionLine);
         toolBar->addAction(actionFreehand);
+        toolBar->addAction(actionRectangle);
 
         retranslateUi(MainWindow);
 
@@ -90,6 +95,7 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         actionFreehand->setText(QCoreApplication::translate("MainWindow", "\320\232\320\270\321\201\321\202\321\214", nullptr));
         actionLine->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\321\217\320\274\320\260\321\217 \320\273\320\270\320\275\320\270\321\217", nullptr));
+        actionRectangle->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\321\217\320\274\320\276\321\203\320\263\320\276\320\273\321\214\320\275\320\270\320\272", nullptr));
         toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 

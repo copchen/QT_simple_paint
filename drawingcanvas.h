@@ -8,7 +8,7 @@
 #include <QPoint>
 
 struct Shape {
-    enum Type { Line, Freehand };
+    enum Type { Line, Freehand, Rectangle };
     Type type;
     QPoint start;
     QPoint end;
@@ -20,7 +20,7 @@ class DrawingCanvas : public QWidget {
 
 public:
     explicit DrawingCanvas(QWidget *parent = nullptr);
-    void setTool(Shape::Type tool); // Метод для установки инструмента
+    void setTool(Shape::Type tool);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
