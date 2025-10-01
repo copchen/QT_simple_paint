@@ -80,9 +80,12 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionLine"/>
    <addaction name="actionFreehand"/>
+   <addaction name="actionLine"/>
+   <addaction name="actionPolyline"/>
    <addaction name="actionRectangle"/>
+   <addaction name="actionEllipse"/>
+   <addaction name="actionPolygon"/>
   </widget>
   <action name="actionFreehand">
    <property name="text">
@@ -103,6 +106,30 @@
   <action name="actionRectangle">
    <property name="text">
     <string>Прямоугольник</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionPolyline">
+   <property name="text">
+    <string>Кривая линия</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionEllipse">
+   <property name="text">
+    <string>Эллипс</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionPolygon">
+   <property name="text">
+    <string>Многоугольник</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

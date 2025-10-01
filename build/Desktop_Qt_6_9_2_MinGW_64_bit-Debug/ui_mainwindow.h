@@ -27,6 +27,9 @@ public:
     QAction *actionFreehand;
     QAction *actionLine;
     QAction *actionRectangle;
+    QAction *actionPolyline;
+    QAction *actionEllipse;
+    QAction *actionPolygon;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     DrawingCanvas *drawingCanvas;
@@ -47,6 +50,15 @@ public:
         actionRectangle = new QAction(MainWindow);
         actionRectangle->setObjectName("actionRectangle");
         actionRectangle->setMenuRole(QAction::MenuRole::NoRole);
+        actionPolyline = new QAction(MainWindow);
+        actionPolyline->setObjectName("actionPolyline");
+        actionPolyline->setMenuRole(QAction::MenuRole::NoRole);
+        actionEllipse = new QAction(MainWindow);
+        actionEllipse->setObjectName("actionEllipse");
+        actionEllipse->setMenuRole(QAction::MenuRole::NoRole);
+        actionPolygon = new QAction(MainWindow);
+        actionPolygon->setObjectName("actionPolygon");
+        actionPolygon->setMenuRole(QAction::MenuRole::NoRole);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
@@ -81,9 +93,12 @@ public:
         toolBar->setObjectName("toolBar");
         MainWindow->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolBar);
 
-        toolBar->addAction(actionLine);
         toolBar->addAction(actionFreehand);
+        toolBar->addAction(actionLine);
+        toolBar->addAction(actionPolyline);
         toolBar->addAction(actionRectangle);
+        toolBar->addAction(actionEllipse);
+        toolBar->addAction(actionPolygon);
 
         retranslateUi(MainWindow);
 
@@ -96,6 +111,9 @@ public:
         actionFreehand->setText(QCoreApplication::translate("MainWindow", "\320\232\320\270\321\201\321\202\321\214", nullptr));
         actionLine->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\321\217\320\274\320\260\321\217 \320\273\320\270\320\275\320\270\321\217", nullptr));
         actionRectangle->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\321\217\320\274\320\276\321\203\320\263\320\276\320\273\321\214\320\275\320\270\320\272", nullptr));
+        actionPolyline->setText(QCoreApplication::translate("MainWindow", "\320\232\321\200\320\270\320\262\320\260\321\217 \320\273\320\270\320\275\320\270\321\217", nullptr));
+        actionEllipse->setText(QCoreApplication::translate("MainWindow", "\320\255\320\273\320\273\320\270\320\277\321\201", nullptr));
+        actionPolygon->setText(QCoreApplication::translate("MainWindow", "\320\234\320\275\320\276\320\263\320\276\321\203\320\263\320\276\320\273\321\214\320\275\320\270\320\272", nullptr));
         toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 

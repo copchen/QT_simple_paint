@@ -17,6 +17,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionRectangle, &QAction::triggered, this, [this]() {
         if (canvas) canvas->setTool(Shape::Rectangle);
     });
+    connect(ui->actionPolyline, &QAction::triggered, this, [this]() {
+        if (canvas) canvas->setTool(Shape::Polyline);
+    });
+    connect(ui->actionEllipse, &QAction::triggered, this, [this]() {
+        if (canvas) canvas->setTool(Shape::Ellipse);
+    });
+    connect(ui->actionPolygon, &QAction::triggered, this, [this]() {
+        if (canvas) canvas->setTool(Shape::Polygon);
+    });
 
     setMinimumSize(800, 600);
     resize(800, 600);

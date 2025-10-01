@@ -8,7 +8,7 @@
 #include <QPoint>
 
 struct Shape {
-    enum Type { Line, Freehand, Rectangle };
+   enum Type { Line, Freehand, Rectangle, Polyline, Ellipse, Polygon };
     Type type;
     QPoint start;
     QPoint end;
@@ -27,6 +27,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private:
     bool drawing = false;
