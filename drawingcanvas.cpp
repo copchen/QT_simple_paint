@@ -1,5 +1,6 @@
 #include "drawingcanvas.h"
 #include <QKeyEvent>
+#include <QWheelEvent>
 
 DrawingCanvas::DrawingCanvas(QWidget *parent) : QWidget(parent) {
     setMouseTracking(true);
@@ -22,8 +23,10 @@ void DrawingCanvas::setTool(Shape::Type tool) {
 
 void DrawingCanvas::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    painter.setPen(Qt::black);
     painter.setRenderHint(QPainter::Antialiasing);
+    painter.translate(offset);
+    painter.scale(scale, scale);
+    painter.setPen(Qt::black);
     QFont font("Arial", 12);
     painter.setFont(font);
 
@@ -67,14 +70,22 @@ void DrawingCanvas::paintEvent(QPaintEvent *event) {
         }
     }
 
-    // Отрисовка текущего текста
+
     if (currentTool == Shape::Text && isTextInputActive && !currentText.isEmpty()) {
         painter.drawText(textStartPoint, currentText);
     }
 }
 
 void DrawingCanvas::mousePressEvent(QMouseEvent *event) {
+    if (event->button() == Qt::RightButton) {
+        panActive = true;
+        panStartPoint = event->pos();
+        setCursor(Qt::ClosedHandCursor);
+        return;
+    }
+
     if (event->button() == Qt::LeftButton) {
+        QPointF transformedPoint = (event->pos() - offset) / scale;
         if (currentTool == Shape::Text) {
             if (!currentText.isEmpty()) {
                 Shape shape;
@@ -84,7 +95,7 @@ void DrawingCanvas::mousePressEvent(QMouseEvent *event) {
                 shapes.append(shape);
                 currentText.clear();
             }
-            textStartPoint = event->pos();
+            textStartPoint = transformedPoint.toPoint();
             currentText.clear();
             isTextInputActive = true;
             setFocus();
@@ -93,15 +104,15 @@ void DrawingCanvas::mousePressEvent(QMouseEvent *event) {
             drawing = true;
             if (currentTool == Shape::Freehand) {
                 currentPath.clear();
-                currentPath.append(event->pos());
+                currentPath.append(transformedPoint.toPoint());
             } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
-                startPoint = event->pos();
+                startPoint = transformedPoint.toPoint();
                 endPoint = startPoint;
             } else if (currentTool == Shape::Polyline || currentTool == Shape::Polygon) {
                 if (currentPath.isEmpty()) {
-                    currentPath.append(event->pos());
+                    currentPath.append(transformedPoint.toPoint());
                 } else {
-                    currentPath.append(event->pos());
+                    currentPath.append(transformedPoint.toPoint());
                 }
             }
             update();
@@ -110,24 +121,39 @@ void DrawingCanvas::mousePressEvent(QMouseEvent *event) {
 }
 
 void DrawingCanvas::mouseMoveEvent(QMouseEvent *event) {
+    if (panActive) {
+        offset += event->pos() - panStartPoint;
+        panStartPoint = event->pos();
+        update();
+        return;
+    }
+
     if (drawing) {
+        QPointF transformedPoint = (event->pos() - offset) / scale;
         if (currentTool == Shape::Freehand) {
-            currentPath.append(event->pos());
+            currentPath.append(transformedPoint.toPoint());
         } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
-            endPoint = event->pos();
+            endPoint = transformedPoint.toPoint();
         }
         update();
     }
 }
 
 void DrawingCanvas::mouseReleaseEvent(QMouseEvent *event) {
+    if (event->button() == Qt::RightButton) {
+        panActive = false;
+        setCursor(Qt::ArrowCursor);
+        return;
+    }
+
     if (event->button() == Qt::LeftButton) {
+        QPointF transformedPoint = (event->pos() - offset) / scale;
         if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
             drawing = false;
             Shape shape;
             shape.type = currentTool;
             shape.start = startPoint;
-            shape.end = endPoint;
+            shape.end = transformedPoint.toPoint();
             shapes.append(shape);
             update();
         } else if (currentTool == Shape::Freehand) {
@@ -183,4 +209,25 @@ void DrawingCanvas::keyPressEvent(QKeyEvent *event) {
     } else {
         QWidget::keyPressEvent(event);
     }
+}
+
+void DrawingCanvas::wheelEvent(QWheelEvent *event) {
+    Qt::KeyboardModifiers modifiers = event->modifiers();
+    qreal delta = event->angleDelta().y() / 120.0;
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+
+        qreal scaleFactor = (delta > 0) ? 1.1 : 0.9;
+        QPointF oldOffset = offset;
+        qreal oldScale = scale;
+        scale *= scaleFactor;
+        scale = qMax(0.1, qMin(scale, 10.0));
+
+
+        QPointF mousePos = event->position();
+        offset = mousePos - (mousePos - oldOffset) * (scale / oldScale);
+        update();
+    }
+
+    event->accept();
 }

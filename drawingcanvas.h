@@ -6,6 +6,8 @@
 #include <QMouseEvent>
 #include <QVector>
 #include <QPoint>
+//#include <QMetaFile>
+#include <QWheelEvent>
 
 
 struct Shape {
@@ -24,6 +26,7 @@ class DrawingCanvas : public QWidget {
 public:
     explicit DrawingCanvas(QWidget *parent = nullptr);
     void setTool(Shape::Type tool);
+    //bool saveToEMF(const QString &filename);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -32,6 +35,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
 
 private:
@@ -44,6 +48,10 @@ private:
     QString currentText;
     QPoint textStartPoint;
     bool isTextInputActive = false;
+    QPointF offset = QPointF(0, 0);
+    qreal scale = 1.0;
+    bool panActive = false;
+    QPoint panStartPoint;
 };
 
 #endif // DRAWINGCANVAS_H
