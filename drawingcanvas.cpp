@@ -19,6 +19,10 @@ void DrawingCanvas::setTool(Shape::Type tool) {
         isTextInputActive = false;
         update();
     }
+    if (currentTool != Shape::Select) {
+        selecting = false;
+        selectArea = QRect();
+    }
 }
 
 void DrawingCanvas::paintEvent(QPaintEvent *event) {
@@ -70,9 +74,14 @@ void DrawingCanvas::paintEvent(QPaintEvent *event) {
         }
     }
 
-
     if (currentTool == Shape::Text && isTextInputActive && !currentText.isEmpty()) {
         painter.drawText(textStartPoint, currentText);
+    }
+
+
+    if (selecting && !selectArea.isNull()) {
+        painter.setPen(QPen(Qt::blue, 1, Qt::DashLine));
+        painter.drawRect(selectArea);
     }
 }
 
@@ -99,6 +108,11 @@ void DrawingCanvas::mousePressEvent(QMouseEvent *event) {
             currentText.clear();
             isTextInputActive = true;
             setFocus();
+            update();
+        } else if (currentTool == Shape::Select) {
+            selecting = true;
+            startPoint = transformedPoint.toPoint(); // Используем существующую startPoint
+            selectArea = QRect(startPoint, startPoint);
             update();
         } else {
             drawing = true;
@@ -134,6 +148,9 @@ void DrawingCanvas::mouseMoveEvent(QMouseEvent *event) {
             currentPath.append(transformedPoint.toPoint());
         } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
             endPoint = transformedPoint.toPoint();
+        } else if (currentTool == Shape::Select && selecting) {
+            endPoint = transformedPoint.toPoint(); // Используем существующую endPoint
+            selectArea = QRect(startPoint, endPoint).normalized();
         }
         update();
     }
@@ -148,7 +165,15 @@ void DrawingCanvas::mouseReleaseEvent(QMouseEvent *event) {
 
     if (event->button() == Qt::LeftButton) {
         QPointF transformedPoint = (event->pos() - offset) / scale;
-        if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
+        if (currentTool == Shape::Select && selecting) {
+            selecting = false;
+            endPoint = transformedPoint.toPoint();
+            selectArea = QRect(startPoint, endPoint).normalized();
+            if (!selectArea.isNull()) {
+                print(); // Автоматическая печать после завершения выделения
+            }
+            update();
+        } else if (currentTool == Shape::Line || currentTool == Shape::Rectangle || currentTool == Shape::Ellipse) {
             drawing = false;
             Shape shape;
             shape.type = currentTool;
@@ -230,4 +255,20 @@ void DrawingCanvas::wheelEvent(QWheelEvent *event) {
     }
 
     event->accept();
+}
+
+void DrawingCanvas::print() {
+    if (!selectArea.isNull()) {
+        QPrinter printer(QPrinter::HighResolution);
+        QPrintDialog printDialog(&printer, this);
+        if (printDialog.exec() == QDialog::Accepted) {
+            QPainter painter(&printer);
+            QRect targetRect = QRect(0, 0, printer.width(), printer.height());
+            QPixmap pixmap = grab(selectArea); // Захватываем только выделенную область
+            painter.drawPixmap(targetRect, pixmap, pixmap.rect());
+            qDebug() << "print: selectArea =" << selectArea << ", pixmap size =" << pixmap.size();
+        }
+    } else {
+        QMessageBox::warning(this, "Print Error", "Select Area first!");
+    }
 }

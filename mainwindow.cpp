@@ -29,9 +29,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionText, &QAction::triggered, this, [this]() {
         if (canvas) canvas->setTool(Shape::Text);
     });
+    connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::on_actionPrint_triggered);
 
     setMinimumSize(800, 600);
     resize(800, 600);
+}
+
+void MainWindow::on_actionPrint_triggered() {
+    if (canvas) {
+        canvas->setTool(Shape::Select); // Активируем режим выбора области
+        canvas->selecting = true; // Готовимся к выделению
+        canvas->selectArea = QRect(); // Сбрасываем предыдущую область
+        canvas->setCursor(Qt::CrossCursor); // Меняем курсор
+        canvas->update(); // Обновляем виджет
+    }
 }
 
 MainWindow::~MainWindow()

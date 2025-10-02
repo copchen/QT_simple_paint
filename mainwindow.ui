@@ -87,6 +87,7 @@
    <addaction name="actionEllipse"/>
    <addaction name="actionPolygon"/>
    <addaction name="actionText"/>
+   <addaction name="actionPrint"/>
   </widget>
   <action name="actionFreehand">
    <property name="text">
@@ -139,6 +140,14 @@
   <action name="actionText">
    <property name="text">
     <string>Текст</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="text">
+    <string>Печать</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

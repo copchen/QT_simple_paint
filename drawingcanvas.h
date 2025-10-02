@@ -6,12 +6,14 @@
 #include <QMouseEvent>
 #include <QVector>
 #include <QPoint>
-//#include <QMetaFile>
 #include <QWheelEvent>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QMessageBox>
 
 
 struct Shape {
-   enum Type { Line, Freehand, Rectangle, Polyline, Ellipse, Polygon,Text };
+  enum Type { Line, Freehand, Rectangle, Polyline, Ellipse, Polygon, Text, Select };
     Type type;
     QPoint start;
     QPoint end;
@@ -23,10 +25,16 @@ struct Shape {
 class DrawingCanvas : public QWidget {
     Q_OBJECT
 
+
+signals:
+    void selectionFinished(); // Сигнал завершения выделения (оставим для совместимости, хотя используем прямой вызов)
+
 public:
     explicit DrawingCanvas(QWidget *parent = nullptr);
     void setTool(Shape::Type tool);
-    //bool saveToEMF(const QString &filename);
+    void print();
+    QRect selectArea;
+    bool selecting = false;
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -52,6 +60,7 @@ private:
     qreal scale = 1.0;
     bool panActive = false;
     QPoint panStartPoint;
+
 };
 
 #endif // DRAWINGCANVAS_H

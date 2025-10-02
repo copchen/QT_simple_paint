@@ -31,6 +31,7 @@ public:
     QAction *actionEllipse;
     QAction *actionPolygon;
     QAction *actionText;
+    QAction *actionPrint;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     DrawingCanvas *drawingCanvas;
@@ -63,6 +64,9 @@ public:
         actionText = new QAction(MainWindow);
         actionText->setObjectName("actionText");
         actionText->setMenuRole(QAction::MenuRole::NoRole);
+        actionPrint = new QAction(MainWindow);
+        actionPrint->setObjectName("actionPrint");
+        actionPrint->setMenuRole(QAction::MenuRole::NoRole);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
@@ -104,6 +108,7 @@ public:
         toolBar->addAction(actionEllipse);
         toolBar->addAction(actionPolygon);
         toolBar->addAction(actionText);
+        toolBar->addAction(actionPrint);
 
         retranslateUi(MainWindow);
 
@@ -120,6 +125,7 @@ public:
         actionEllipse->setText(QCoreApplication::translate("MainWindow", "\320\255\320\273\320\273\320\270\320\277\321\201", nullptr));
         actionPolygon->setText(QCoreApplication::translate("MainWindow", "\320\234\320\275\320\276\320\263\320\276\321\203\320\263\320\276\320\273\321\214\320\275\320\270\320\272", nullptr));
         actionText->setText(QCoreApplication::translate("MainWindow", "\320\242\320\265\320\272\321\201\321\202", nullptr));
+        actionPrint->setText(QCoreApplication::translate("MainWindow", "\320\237\320\265\321\207\320\260\321\202\321\214", nullptr));
         toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 
